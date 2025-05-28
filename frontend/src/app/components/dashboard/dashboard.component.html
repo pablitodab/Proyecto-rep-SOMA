@@ -1,0 +1,55 @@
+<app-header></app-header>
+<section class="introduccion">
+  <h2>¡Bienvenido a tu Planificador Diario!</h2>
+  <p>
+    Aquí puedes acceder a todas las herramientas para organizar tu vida diaria.
+    Selecciona cualquiera de nuestros servicios para empezar.
+  </p>
+</section>
+
+<section class="contenido">
+  <h2>Tus Servicios</h2>
+  <div class="servicios-container">
+    <div class="servicios">
+      <div class="servicio">
+        <h4>Calendario</h4>
+        <p>
+          Visualiza tu mes de un vistazo y apunta tus eventos personales,
+          laborales o citas importantes.
+        </p>
+        <a [routerLink]="['/dashboard/calendar']" class="servicio-link">Ir al Calendario</a>
+      </div>
+      <div class="servicio">
+        <h4>Rutina</h4>
+        <p>
+          Planifica tus rutinas de ejercicio y registra tus progresos diarios.
+        </p>
+        <a [routerLink]="['/dashboard/routine']" class="servicio-link">Ir a Rutina</a>
+      </div>
+      <div class="servicio">
+        <h4>Nutrición</h4>
+        <p>
+          Controla tus medidas corporales y registra tus comidas diarias.
+        </p>
+        <a [routerLink]="['/dashboard/nutrition']" class="servicio-link">Ir a Nutrición</a>
+      </div>
+    </div>
+    <div class="servicios">
+      <div class="servicio">
+        <h4>Objetivos</h4>
+        <p>
+          Define tus metas y lleva un seguimiento de tu progreso.
+        </p>
+        <a [routerLink]="['/dashboard/objetivos']" class="servicio-link">Ir a Objetivos</a>
+      </div>
+      <div class="servicio">
+        <h4>Diario</h4>
+        <p>
+          Escribe tus pensamientos y reflexiones diarias.
+        </p>
+        <a [routerLink]="['/dashboard/diario']" class="servicio-link">Ir al Diario</a>
+      </div>
+    </div>
+  </div>
+</section>
+<app-footer></app-footer>

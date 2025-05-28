@@ -1,0 +1,109 @@
+<app-header></app-header>
+
+<!-- SECCIÓN 1: INFORMACIÓN -->
+<section class="info-rutina">
+  <h2>Rutinas de entrenamiento</h2>
+  <p>
+    En este apartado puedes personalizar tu rutina semanal de gimnasio, calistenia o ejercicios en casa.
+    Registra qué grupo muscular o actividad realizas cada día, añade tus ejercicios diarios y consulta tu progreso semanal.
+  </p>
+</section>
+
+<!-- SECCIÓN 2: FORMULARIO DE RUTINA SEMANAL -->
+<section class="formulario-rutina" *ngIf="!rutinaGuardada">
+  <h3>Configura tu rutina semanal</h3>
+  <form (ngSubmit)="guardarRutina()" #rutinaForm="ngForm">
+    <div class="dias-semana" *ngFor="let dia of diasSemana; let i = index">
+      <label [for]="'dia'+i">{{ dia }}</label>
+      <input
+        type="text"
+        [id]="'dia'+i"
+        [(ngModel)]="rutina[dia]"
+        [name]="dia"
+        placeholder="Ej: Pierna y lumbar"
+        required
+      />
+    </div>
+    <button type="submit" [disabled]="!rutinaForm.form.valid">Guardar rutina</button>
+  </form>
+</section>
+
+<!-- Tabla resumen de rutina semanal -->
+<section class="tabla-rutina" *ngIf="rutinaGuardada">
+  <h3>Tu rutina semanal</h3>
+  <table>
+    <tr>
+      <th>Día</th>
+      <th>Rutina</th>
+    </tr>
+    <tr *ngFor="let dia of diasSemana">
+      <td>{{ dia }}</td>
+      <td>{{ rutina[dia] }}</td>
+    </tr>
+  </table>
+  <button (click)="editarRutina()">Editar rutina</button>
+</section>
+
+<!-- SECCIÓN 3: REGISTRO DE EJERCICIOS DIARIOS -->
+<section class="registro-ejercicios">
+  <h3>Ejercicios de hoy</h3>
+  <div class="info-dia">
+    <strong>{{ diaActual }}</strong> - {{ fechaActual | date:'longDate' }}<br>
+    <span>Rutina de hoy: <strong>{{ rutina[diaActual] || 'No definida' }}</strong></span>
+  </div>
+  <button (click)="mostrarFormularioEjercicio = !mostrarFormularioEjercicio">
+    {{ mostrarFormularioEjercicio ? 'Cancelar' : 'Agregar ejercicio' }}
+  </button>
+
+  <!-- Formulario para añadir ejercicio -->
+  <form *ngIf="mostrarFormularioEjercicio" (ngSubmit)="agregarEjercicio()" #ejForm="ngForm" class="form-ejercicio">
+    <label for="nombreEjercicio">Ejercicio</label>
+    <input type="text" id="nombreEjercicio" [(ngModel)]="nuevoEjercicio.nombre" name="nombreEjercicio" required placeholder="Ej: Sentadilla"/>
+
+    <div class="sets">
+      <div *ngFor="let set of nuevoEjercicio.sets; let i = index" class="set-row">
+        <span>Set {{ i+1 }}</span>
+        <input type="number" [(ngModel)]="set.peso" name="peso{{i}}" placeholder="Kg" required min="0"/>
+        <input type="number" [(ngModel)]="set.reps" name="reps{{i}}" placeholder="Reps" required min="1"/>
+        <button type="button" (click)="eliminarSet(i)">Eliminar set</button>
+      </div>
+      <button type="button" (click)="agregarSet()">Añadir set</button>
+    </div>
+    <button type="submit" [disabled]="!ejForm.form.valid">Guardar ejercicio</button>
+  </form>
+
+  <!-- Tabla de ejercicios realizados hoy -->
+  <div *ngIf="ejerciciosHoy.length > 0" class="tabla-ejercicios">
+    <h4>Ejercicios realizados</h4>
+    <table>
+      <tr>
+        <th>Ejercicio</th>
+        <th>Set</th>
+        <th>Peso (kg)</th>
+        <th>Reps</th>
+      </tr>
+      <ng-container *ngFor="let ej of ejerciciosHoy">
+        <tr *ngFor="let set of ej.sets; let i = index">
+          <td *ngIf="i==0" [attr.rowspan]="ej.sets.length">{{ ej.nombre }}</td>
+          <td>Set {{ i+1 }}</td>
+          <td>{{ set.peso }}</td>
+          <td>{{ set.reps }}</td>
+        </tr>
+      </ng-container>
+    </table>
+  </div>
+</section>
+
+<!-- SECCIÓN 4: ESTADÍSTICAS SEMANALES -->
+<section class="estadisticas-semana">
+  <h3>Resumen semanal</h3>
+  <div class="estadisticas-cards">
+    <div class="estadistica" *ngFor="let stat of estadisticas">
+      <h4>{{ stat.ejercicio }}</h4>
+      <p>Peso máximo: <strong>{{ stat.maxPeso }} kg</strong></p>
+      <p>Repeticiones máximas: <strong>{{ stat.maxReps }}</strong></p>
+    </div>
+  </div>
+</section>
+
+<app-footer></app-footer>

@@ -1,0 +1,9 @@
+import { NextFunction, Request, Response } from "express"
+
+const validatetoken = (req: Request, res: Response, next: nextFunction)=>{
+    const headerToken = req.headers['authorization']
+    console.log(headerToken);
+
+}
+
+export default validatetoken

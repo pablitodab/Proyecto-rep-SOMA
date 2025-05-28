@@ -1,0 +1,31 @@
+version: '3'
+
+services:
+  backend:
+    image: node:18
+    container_name: backend
+    working_dir: /usr/src/app
+    volumes:
+      - ./backend:/usr/src/app
+    ports:
+      - "3000:3000"
+    command: bash -c "npm install && npm start"
+    networks:
+      - app-network
+
+  frontend:
+    image: node:18
+    container_name: frontend
+    working_dir: /usr/src/app
+    volumes:
+      - ./frontend:/usr/src/app
+    ports:
+      - "4200:4200"  
+    command: bash -c "npm install -g @angular/cli@latest && npm install && ng serve --host 0.0.0.0"
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
