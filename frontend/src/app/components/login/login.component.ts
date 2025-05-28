@@ -22,18 +22,18 @@ export class LoginComponent {
   constructor(private http: HttpClient, private router: Router) {}
 
   onSubmit() {
-    this.http.post<any>('/api/user/login', this.loginData)
-      .subscribe({
-        next: (response) => {
-          // Guardar el token en localStorage
-          localStorage.setItem('token', response.token);
-          // Redireccionar al dashboard
-          this.router.navigate(['/dashboard']);
-        },
-        error: (error) => {
-          this.errorMessage = error.error.msg || 'Error al iniciar sesión';
-        }
-      });
+    this.http.post<any>('api/user/login', this.loginData).subscribe({
+  next: (response) => {
+    localStorage.setItem('token', response.token);
+    this.router.navigate(['/dashboard']);
+  },
+  error: (error) => {
+    this.errorMessage = error.status === 401 
+      ? 'Credenciales incorrectas' 
+      : 'Error del servidor';
+    this.errorType = error.status === 401 ? 'credentials' : 'server';
+  }
+});
   }
 }
 

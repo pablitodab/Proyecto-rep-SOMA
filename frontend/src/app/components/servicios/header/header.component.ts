@@ -4,7 +4,7 @@ import { Router, RouterLink } from '@angular/router';
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [RouterLink], // <-- Añade esto
+  imports: [RouterLink],
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.css']
 })
@@ -14,6 +14,7 @@ export class HeaderComponent {
   logout() {
     localStorage.removeItem('token');
     this.router.navigate(['/login']);
+    window.location.reload();
   }
 
   logoutAndGoHome() {

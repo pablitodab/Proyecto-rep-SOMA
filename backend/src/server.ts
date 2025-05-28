@@ -1,12 +1,21 @@
 import express, { Application } from 'express';
 import { sequelize } from './database/connection';
-import RUser from './routes/user';
-import { User } from './models/user';
-import { Routine } from './models/routine';
-import { WorkoutSession } from './models/workout_session';
-import { WorkoutExercise } from './models/workout_exercise';
 import { setupAssociations } from './models/associations';
-import RRoutine from './routes/routine';
+
+import User from './models/user';
+import RUser from './routes/user';
+
+import Objetivo from "./models/objetivo";
+import RObjetivo from './routes/objetivo';
+
+import Diario from './models/diario';
+import RDiario from './routes/diario';
+
+import Nutricion from './models/nutricion';
+import RNutricion from './routes/nutricion';
+
+import Rutina from './models/rutina';
+import RRutina from './routes/rutina';
 
 class Server {
     private app: Application;
@@ -23,14 +32,16 @@ class Server {
 
     listen() {
         this.app.listen(this.port, () => {
-            console.log("Te estás corriendo por el puerto: " + this.port);
+            console.log("Servidor corriendo en puerto: " + this.port);
         })
     }
 
     router() {
-    this.app.use(RUser);
-    this.app.use(RRoutine);
-    
+        this.app.use(RUser);
+        this.app.use('/api/objetivos', RObjetivo);
+	this.app.use('/api/diario', RDiario);
+	this.app.use('/api/nutricion', RNutricion);
+	this.app.use('/api/rutina', RRutina);
     }
 
     middlewares() {
@@ -39,17 +50,10 @@ class Server {
 
     async DBconnect(){
         try {
-            // Configurar asociaciones
             setupAssociations();
-            
-            // Sincronizar modelos con la base de datos
             await User.sync({ alter: false });
-            await Routine.sync({ alter: false });
-            await WorkoutSession.sync({ alter: false });
-            await WorkoutExercise.sync({ alter: false });
-            
-            console.log("Todos los modelos se han sincronizado correctamente");
-            console.log("Conexión establecida");
+            await sequelize.sync({ alter: false });
+            console.log("Modelos sincronizados correctamente");
         } catch (error) {
             console.log("Error de conexión: ", error)
         }

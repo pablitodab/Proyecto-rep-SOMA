@@ -22,8 +22,17 @@
         required
       >
     </div>
-    <button type="submit" [disabled]="!loginForm.valid">Iniciar sesión</button>
+    <button type="submit" [disabled]="!loginForm.valid || loading">
+          {{ loading ? 'Cargando...' : 'Iniciar sesión' }}
+    </button>
   </form>
+  <div *ngIf="errorType === 'credentials'" class="error-message">
+    Credenciales incorrectas
+  </div>
+
+  <div *ngIf="errorType === 'server'" class="error-message">
+    Error de conexión con el servidor
+  </div>
   <div *ngIf="errorMessage" class="error-message">
     {{ errorMessage }}
   </div>

@@ -1,3 +1,34 @@
 <app-header></app-header>
-<p>Objetivos</p>
+<div class="objetivos-container">
+  <h2>Mis Objetivos</h2>
+  <form (ngSubmit)="onSubmit()" #objetivoForm="ngForm">
+    <div class="form-group">
+      <label>Nombre</label>
+      <input type="text" [(ngModel)]="nuevoObjetivo.nombre" name="nombre" required>
+    </div>
+    <div class="form-group">
+      <label>Fecha límite</label>
+      <input type="date" [(ngModel)]="nuevoObjetivo.fechaFin" name="fechaFin" required>
+    </div>
+    <div class="form-group">
+      <label>Importancia</label>
+      <select [(ngModel)]="nuevoObjetivo.importancia" name="importancia" required>
+        <option value="alta">Alta</option>
+        <option value="media">Media</option>
+        <option value="baja">Baja</option>
+      </select>
+    </div>
+    <button type="submit" [disabled]="!objetivoForm.valid">Agregar objetivo</button>
+  </form>
+  <div class="objetivos-list">
+    <div class="objetivo-item" *ngFor="let obj of objetivos">
+      <h3>{{ obj.nombre }}</h3>
+      <p>Fecha límite: {{ obj.fechaFin | date:'dd/MM/yyyy' }}</p>
+      <p>Importancia: {{ obj.importancia | titlecase }}</p>
+      <p [ngClass]="{'cumplido': obj.cumplido}">{{ obj.cumplido ? '✅ Cumplido' : '◻️ Pendiente' }}</p>
+      <button (click)="marcarCumplido(obj.id)">Marcar como cumplido</button>
+      <button (click)="eliminarObjetivo(obj.id)">Eliminar</button>
+    </div>
+  </div>
+</div>
 <app-footer></app-footer>

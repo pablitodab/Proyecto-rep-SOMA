@@ -1,3 +1,27 @@
 <app-header></app-header>
-<p>Diario</p>
+<div class="diario-container">
+  <h2>Mi Diario</h2>
+  <form (ngSubmit)="onSubmit()" #diarioForm="ngForm">
+    <div class="form-group">
+      <label>Título</label>
+      <input type="text" [(ngModel)]="nuevaEntrada.titulo" name="titulo" required>
+    </div>
+    <div class="form-group">
+      <label>Fecha</label>
+      <input type="date" [(ngModel)]="nuevaEntrada.fecha" name="fecha" required>
+    </div>
+    <div class="form-group">
+      <label>Texto</label>
+      <textarea [(ngModel)]="nuevaEntrada.texto" name="texto" required></textarea>
+    </div>
+    <button type="submit" [disabled]="!diarioForm.valid">Guardar entrada</button>
+  </form>
+  <div class="entradas-list">
+    <div class="entrada-item" *ngFor="let entrada of entradas">
+      <h3>{{ entrada.titulo }}</h3>
+      <p class="fecha">{{ entrada.fecha | date:'dd/MM/yyyy' }}</p>
+      <p class="texto">{{ entrada.texto }}</p>
+    </div>
+  </div>
+</div>
 <app-footer></app-footer>

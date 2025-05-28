@@ -1,3 +1,60 @@
 <app-header></app-header>
-<p>Nutrición</p>
+<div class="nutrition-container">
+  <h2>Registro Nutricional</h2>
+  <form (ngSubmit)="onSubmit()" #nutritionForm="ngForm">
+    <div class="form-group">
+      <label>Fecha</label>
+      <input type="date" [(ngModel)]="nuevoRegistro.fecha" name="fecha" required>
+    </div>
+    <div class="form-group">
+      <label>Calorías ingeridas</label>
+      <input type="number" [(ngModel)]="nuevoRegistro.calorias_ingeridas" name="calorias_ingeridas" required>
+    </div>
+    <div class="form-group">
+      <label>Calorías gastadas</label>
+      <input type="number" [(ngModel)]="nuevoRegistro.calorias_gastadas" name="calorias_gastadas" required>
+    </div>
+    <div class="form-group">
+      <label>Km caminados</label>
+      <input type="number" step="0.1" [(ngModel)]="nuevoRegistro.km_caminados" name="km_caminados" required>
+    </div>
+    <div class="form-group">
+      <label>Cardio realizado</label>
+      <input type="text" [(ngModel)]="nuevoRegistro.cardio_realizado1" name="cardio_realizado1">
+    </div>
+    <div class="form-group">
+      <label>Tiempo cardio (min)</label>
+      <input type="number" [(ngModel)]="nuevoRegistro.tiempo_cardio1" name="tiempo_cardio1">
+    </div>
+    <div class="form-group">
+      <label>Distancia cardio (km)</label>
+      <input type="number" step="0.1" [(ngModel)]="nuevoRegistro.distancia_cardio1" name="distancia_cardio1">
+    </div>
+    <div class="form-group">
+      <label>Carbohidratos (g)</label>
+      <input type="number" step="0.1" [(ngModel)]="nuevoRegistro.carbohidratos" name="carbohidratos">
+    </div>
+    <div class="form-group">
+      <label>Proteínas (g)</label>
+      <input type="number" step="0.1" [(ngModel)]="nuevoRegistro.proteinas" name="proteinas">
+    </div>
+    <div class="form-group">
+      <label>Grasas (g)</label>
+      <input type="number" step="0.1" [(ngModel)]="nuevoRegistro.grasas" name="grasas">
+    </div>
+    <button type="submit" [disabled]="!nutritionForm.valid">Guardar registro</button>
+  </form>
+  <div class="registros-list">
+    <div class="registro-item" *ngFor="let reg of registros">
+      <h3>{{ reg.fecha | date:'dd/MM/yyyy' }}</h3>
+      <p>Calorías ingeridas: {{ reg.calorias_ingeridas }}</p>
+      <p>Calorías gastadas: {{ reg.calorias_gastadas }}</p>
+      <p>Km caminados: {{ reg.km_caminados }}</p>
+      <p *ngIf="reg.cardio_realizado1">Cardio: {{ reg.cardio_realizado1 }} ({{ reg.tiempo_cardio1 }} min, {{ reg.distancia_cardio1 }} km)</p>
+      <p>Carbohidratos: {{ reg.carbohidratos }} g</p>
+      <p>Proteínas: {{ reg.proteinas }} g</p>
+      <p>Grasas: {{ reg.grasas }} g</p>
+    </div>
+  </div>
+</div>
 <app-footer></app-footer>

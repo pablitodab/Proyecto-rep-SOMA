@@ -1,23 +1,24 @@
 import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
 
+interface JwtPayload {
+    userId: number;
+    email: string;
+}
+
 const validateToken = (req: Request, res: Response, next: NextFunction) => {
-    const headersToken = req.headers['authorization'];
-    console.log(headersToken);
-    if(headersToken != undefined && headersToken.startsWith('Bearer ')){
-	try {
-	    const token = headersToken.slice(7)
-	    jwt.verify(token, process.env.SECRET_KEY || "Pablo-de-Abajo-TKN")
-	    next()
-	} catch (error) {
-	    res.status(401).json({
-		msg:`Token invalido`
-            })
-	}
-    }else{
-	res.status(401).json({
-	    msg:`Acceso denegado`
-	})
+    const token = req.header('Authorization')?.split(' ')[1];
+    
+    if (!token) {
+        return res.status(401).json({ msg: 'Token no proporcionado' });
+    }
+
+    try {
+        const decoded = jwt.verify(token, process.env.SECRET_KEY || 'Pablo-de-Abajo-TKN') as JwtPayload;
+        req.userId = decoded.userId; // Ahora funciona
+        next();
+    } catch (error) {
+        res.status(401).json({ msg: 'Token inválido' });
     }
 };
 

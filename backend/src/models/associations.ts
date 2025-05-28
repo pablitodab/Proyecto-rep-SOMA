@@ -1,36 +1,23 @@
-import { User } from './user';
-import { Routine } from './routine';
-import { WorkoutSession } from './workout_session';
-import { WorkoutExercise } from './workout_exercise';
+import User from './user';
+import Objetivo from './objetivo';
+import Diario from './diario';
+import Nutricion from './nutricion';
+import Rutina from './rutina';
 
 export function setupAssociations() {
-    // Relaciones User - Routine (Un usuario tiene muchas rutinas)
-    User.hasMany(Routine, { 
-        foreignKey: 'user_id',
-        as: 'routines'
-    });
-    Routine.belongsTo(User, { 
-        foreignKey: 'user_id',
-        as: 'user'
-    });
+  // objetivos
+  User.hasMany(Objetivo, { foreignKey: 'userId' });
+  Objetivo.belongsTo(User, { foreignKey: 'userId' });
+  
+  // diario
+  User.hasMany(Diario, { foreignKey: 'userId' });
+  Diario.belongsTo(User, { foreignKey: 'userId' });
 
-    // Relaciones User - WorkoutSession (Un usuario tiene muchas sesiones)
-    User.hasMany(WorkoutSession, {
-        foreignKey: 'user_id',
-        as: 'workout_sessions'
-    });
-    WorkoutSession.belongsTo(User, {
-        foreignKey: 'user_id',
-        as: 'user'
-    });
+  // nutricion
+  User.hasMany(Nutricion, { foreignKey: 'userId' });
+  Nutricion.belongsTo(User, { foreignKey: 'userId' });
 
-    // Relaciones WorkoutSession - WorkoutExercise (Una sesión tiene muchos ejercicios)
-    WorkoutSession.hasMany(WorkoutExercise, {
-        foreignKey: 'session_id',
-        as: 'exercises'
-    });
-    WorkoutExercise.belongsTo(WorkoutSession, {
-        foreignKey: 'session_id',
-        as: 'session'
-    });
+  // rutina
+  User.hasMany(Rutina, { foreignKey: 'userId' });
+  Rutina.belongsTo(User, { foreignKey: 'userId' });
 }

@@ -8,7 +8,9 @@ import { DiarioComponent } from './components/servicios/diario/diario.component'
 import { NutritionComponent } from './components/servicios/nutrition/nutrition.component';
 import { ObjetivosComponent } from './components/servicios/objetivos/objetivos.component';
 import { RoutineComponent } from './components/servicios/routine/routine.component';
-import { AuthGuard } from './guards/auth.guard';
+import { authGuard } from './guards/auth.guard'; // ✅ minúsculas
+import { NotFoundComponent } from './components/not-found/not-found.component';
+
 
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -17,34 +19,13 @@ export const routes: Routes = [
   { path: 'register', component: RegisterComponent },
   { 
     path: 'dashboard', 
-    component: DashboardComponent, 
-    canActivate: [AuthGuard] 
+    component: DashboardComponent,
+    canActivate: [authGuard],
+    children: [
+      { path: 'calendar', component: CalendarComponent },
+      { path: 'routine', component: RoutineComponent },
+      { path: '**', redirectTo: 'calendar' }
+    ]
   },
-  { 
-    path: 'dashboard/calendar', 
-    component: CalendarComponent, 
-    canActivate: [AuthGuard] 
-  },
-  { 
-    path: 'dashboard/diario', 
-    component: DiarioComponent, 
-    canActivate: [AuthGuard] 
-  },
-  { 
-    path: 'dashboard/nutrition', 
-    component: NutritionComponent, 
-    canActivate: [AuthGuard] 
-  },
-  { 
-    path: 'dashboard/objetivos', 
-    component: ObjetivosComponent, 
-    canActivate: [AuthGuard] 
-  },
-  { 
-    path: 'dashboard/routine', 
-    component: RoutineComponent, 
-    canActivate: [AuthGuard] 
-  },
-  { path: '**', redirectTo: 'home' }
-
+  { path: '**', component: NotFoundComponent }
 ];
