@@ -21,26 +21,26 @@ interface NutricionAttributes {
 }
 
 class Nutricion extends Model<NutricionAttributes> implements NutricionAttributes {
-  public id!: number;
-  public fecha!: Date;
-  public calorias_ingeridas!: number;
-  public calorias_gastadas!: number;
-  public km_caminados!: number;
-  public cardio_realizado1?: string;
-  public tiempo_cardio1?: number;
-  public distancia_cardio1?: number;
-  public cardio_realizado2?: string;
-  public tiempo_cardio2?: number;
-  public distancia_cardio2?: number;
-  public carbohidratos?: number;
-  public proteinas?: number;
-  public grasas?: number;
-  public userId!: number;
+  declare id: number;
+  declare fecha: Date;
+  declare calorias_ingeridas: number;
+  declare calorias_gastadas: number;
+  declare km_caminados: number;
+  declare cardio_realizado1?: string;
+  declare tiempo_cardio1?: number;
+  declare distancia_cardio1?: number;
+  declare cardio_realizado2?: string;
+  declare tiempo_cardio2?: number;
+  declare distancia_cardio2?: number;
+  declare carbohidratos?: number;
+  declare proteinas?: number;
+  declare grasas?: number;
+  declare userId: number;
 }
 
 Nutricion.init({
   fecha: {
-    type: DataTypes.DATE,
+    type: DataTypes.DATEONLY,
     allowNull: false
   },
   calorias_ingeridas: {
@@ -56,40 +56,31 @@ Nutricion.init({
     allowNull: false
   },
   cardio_realizado1: {
-    type: DataTypes.STRING(100),
-    allowNull: true
+    type: DataTypes.STRING(100)
   },
   tiempo_cardio1: {
-    type: DataTypes.INTEGER,
-    allowNull: true
+    type: DataTypes.INTEGER
   },
   distancia_cardio1: {
-    type: DataTypes.DECIMAL(5,2),
-    allowNull: true
+    type: DataTypes.DECIMAL(5,2)
   },
   cardio_realizado2: {
-    type: DataTypes.STRING(100),
-    allowNull: true
+    type: DataTypes.STRING(100)
   },
   tiempo_cardio2: {
-    type: DataTypes.INTEGER,
-    allowNull: true
+    type: DataTypes.INTEGER
   },
   distancia_cardio2: {
-    type: DataTypes.DECIMAL(5,2),
-    allowNull: true
+    type: DataTypes.DECIMAL(5,2)
   },
   carbohidratos: {
-    type: DataTypes.DECIMAL(6,2),
-    allowNull: true
+    type: DataTypes.DECIMAL(6,2)
   },
   proteinas: {
-    type: DataTypes.DECIMAL(6,2),
-    allowNull: true
+    type: DataTypes.DECIMAL(6,2)
   },
   grasas: {
-    type: DataTypes.DECIMAL(6,2),
-    allowNull: true
+    type: DataTypes.DECIMAL(6,2)
   },
   userId: {
     type: DataTypes.INTEGER,
@@ -102,6 +93,8 @@ Nutricion.init({
 }, {
   sequelize,
   modelName: 'Nutricion',
+  tableName: 'Nutricion',
+  freezeTableName: true,
   timestamps: false
 });
 

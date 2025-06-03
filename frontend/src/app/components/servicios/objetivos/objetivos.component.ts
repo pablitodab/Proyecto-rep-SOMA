@@ -1,9 +1,17 @@
 import { Component, OnInit } from '@angular/core';
-import { ObjetivoService } from '../../../services/objetivo.service';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { HeaderComponent } from '../header/header.component';
 import { FooterComponent } from '../footer/footer.component';
+import { ObjetivoService } from '../../../services/objetivo.service';
+
+interface Objetivo {
+  id?: number;
+  nombre: string;
+  fechaFin: string;
+  importancia: 'alta' | 'media' | 'baja';
+  cumplido: boolean;
+}
 
 @Component({
   selector: 'app-objetivos',
@@ -13,57 +21,76 @@ import { FooterComponent } from '../footer/footer.component';
   styleUrls: ['./objetivos.component.css']
 })
 export class ObjetivosComponent implements OnInit {
-  objetivos: any[] = [];
-  nuevoObjetivo: any = {};
+  objetivos: Objetivo[] = [];
+  nuevoObjetivo: Objetivo = { 
+    nombre: '', 
+    fechaFin: '', 
+    importancia: 'media', 
+    cumplido: false 
+  };
+  editando = false;
+  objetivoEditId?: number;
 
   constructor(private objetivoService: ObjetivoService) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.cargarObjetivos();
   }
 
-  cargarObjetivos() {
+  cargarObjetivos(): void {
     this.objetivoService.getAll().subscribe({
       next: (data) => this.objetivos = data,
-      error: (err) => console.error('Error:', err)
+      error: (err) => this.mostrarError(err)
     });
   }
 
-  agregarObjetivo() {
-    this.objetivoService.create(this.nuevoObjetivo).subscribe({
-      next: () => {
-        this.nuevoObjetivo = {};
-        this.cargarObjetivos();
-      },
-      error: (err) => console.error('Error:', err)
-    });
+  agregarObjetivo(): void {
+    if (this.editando && this.objetivoEditId) {
+      this.objetivoService.update(this.objetivoEditId, this.nuevoObjetivo)
+        .subscribe({
+          next: () => this.resetFormulario(),
+          error: (err) => this.mostrarError(err)
+        });
+    } else {
+      this.objetivoService.create(this.nuevoObjetivo)
+        .subscribe({
+          next: () => this.resetFormulario(),
+          error: (err) => this.mostrarError(err)
+        });
+    }
   }
 
-  marcarCumplido(id: number) {
+  editarObjetivo(objetivo: Objetivo): void {
+    this.editando = true;
+    this.objetivoEditId = objetivo.id;
+    this.nuevoObjetivo = { ...objetivo };
+  }
+
+  marcarCumplido(id: number): void {
     this.objetivoService.toggleCumplido(id).subscribe({
-      next: () => {
-        // Actualizar localmente sin recargar
-        this.objetivos = this.objetivos.map(obj => 
-          obj.id === id ? {...obj, cumplido: !obj.cumplido} : obj
-        );
-      },
-      error: (err) => console.error('Error:', err)
+      next: () => this.cargarObjetivos(),
+      error: (err) => this.mostrarError(err)
     });
   }
 
-  eliminarObjetivo(id: number) {
-    if(confirm('¿Estás seguro de eliminar este objetivo?')) {
+  eliminarObjetivo(id: number): void {
+    if (confirm('¿Estás seguro de eliminar este objetivo?')) {
       this.objetivoService.delete(id).subscribe({
-        next: () => {
-          this.objetivos = this.objetivos.filter(obj => obj.id !== id);
-        },
-        error: (err) => console.error('Error:', err)
+        next: () => this.cargarObjetivos(),
+        error: (err) => this.mostrarError(err)
       });
     }
   }
 
-  // Corregido el nombre del método
-  onSubmit() {
-    this.agregarObjetivo();
+  private resetFormulario(): void {
+    this.nuevoObjetivo = { nombre: '', fechaFin: '', importancia: 'media', cumplido: false };
+    this.editando = false;
+    this.objetivoEditId = undefined;
+    this.cargarObjetivos();
+  }
+
+  private mostrarError(err: any): void {
+    console.error(err);
+    alert(err.error?.message || 'Error en la operación');
   }
 }

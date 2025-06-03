@@ -12,12 +12,12 @@ interface RutinaAttributes {
 }
 
 class Rutina extends Model<RutinaAttributes> implements RutinaAttributes {
-  public id!: number;
-  public dia!: 'lunes' | 'martes' | 'miércoles' | 'jueves' | 'viernes' | 'sábado' | 'domingo';
-  public descripcion!: string;
-  public enfoque!: string;
-  public cardio!: boolean;
-  public userId!: number;
+  declare id: number;
+  declare dia: 'lunes' | 'martes' | 'miércoles' | 'jueves' | 'viernes' | 'sábado' | 'domingo';
+  declare descripcion: string;
+  declare enfoque: string;
+  declare cardio: boolean;
+  declare userId: number;
 }
 
 Rutina.init({
@@ -26,11 +26,11 @@ Rutina.init({
     allowNull: false
   },
   descripcion: {
-    type: DataTypes.STRING,
+    type: DataTypes.STRING(255),
     allowNull: false
   },
   enfoque: {
-    type: DataTypes.STRING,
+    type: DataTypes.STRING(100),
     allowNull: false
   },
   cardio: {
@@ -48,6 +48,8 @@ Rutina.init({
 }, {
   sequelize,
   modelName: 'Rutina',
+  tableName: 'Rutina',
+  freezeTableName: true,
   timestamps: false
 });
 

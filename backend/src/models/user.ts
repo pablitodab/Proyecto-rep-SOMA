@@ -12,26 +12,47 @@ interface UserAttributes {
 }
 
 class User extends Model<UserAttributes> implements UserAttributes {
-  public id!: number;
-  public name!: string;
-  public lastname!: string;
-  public email!: string;
-  public password!: string;
-  public credential!: string;
-  public status!: number;
+  declare id: number;
+  declare name: string;
+  declare lastname: string;
+  declare email: string;
+  declare password: string;
+  declare credential: string;
+  declare status: number;
 }
 
 User.init({
-  id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
-  name: { type: DataTypes.STRING, allowNull: false },
-  lastname: { type: DataTypes.STRING, allowNull: false },
-  email: { type: DataTypes.STRING, unique: true, allowNull: false },
-  password: { type: DataTypes.STRING, allowNull: false },
-  credential: { type: DataTypes.STRING, unique: true, allowNull: false },
-  status: { type: DataTypes.INTEGER, allowNull: false }
+  name: {
+    type: DataTypes.STRING,
+    allowNull: false
+  },
+  lastname: {
+    type: DataTypes.STRING,
+    allowNull: false
+  },
+  email: {
+    type: DataTypes.STRING,
+    unique: true,
+    allowNull: false
+  },
+  password: {
+    type: DataTypes.STRING,
+    allowNull: false
+  },
+  credential: {
+    type: DataTypes.STRING,
+    unique: true,
+    allowNull: false
+  },
+  status: {
+    type: DataTypes.INTEGER,
+    allowNull: false
+  }
 }, {
   sequelize,
   modelName: 'User',
+  tableName: 'Users', // Nombre exacto de la tabla
+  freezeTableName: true,
   timestamps: false
 });
 

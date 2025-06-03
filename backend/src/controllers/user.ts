@@ -2,75 +2,122 @@ import { Request, Response } from "express";
 import bcrypt from 'bcrypt';
 import { Op } from '@sequelize/core';
 import jwt from "jsonwebtoken";
-
 import User from "../models/user";
 
 export const register = async (req: Request, res: Response) => {
     const { name, lastname, password, email, credential } = req.body;
 
-    const user = await User.findOne({where: {[Op.or]: [{ email: email }, { credential: credential }]}});
-
-    if (user) {
-        return res.status(400).json({
-            msg: `Usuario ya existe`
+    // Validación de campos requeridos
+    if (!name || !lastname || !password || !email || !credential) {
+        return res.status(400).json({ 
+            success: false,
+            msg: "Todos los campos son obligatorios" 
         });
     }
 
-    const passwordHash = await bcrypt.hash(password, 10);
-
     try {
+        const user = await User.findOne({
+            where: {
+                [Op.or]: [
+                    { email: email },
+                    { credential: credential }
+                ]
+            }
+        });
+
+        if (user) {
+            return res.status(409).json({
+                success: false,
+                msg: "El email o credencial ya están registrados"
+            });
+        }
+
+        const passwordHash = await bcrypt.hash(password, 12);
+
         await User.create({
-            name: name,
-            lastname: lastname,
-            email: email,
+            name,
+            lastname,
+            email,
             password: passwordHash,
-            credential: credential,
+            credential,
             status: 1,
         });
 
-        res.json({
-            msg: `User ${name} ${lastname} created successfully`
-        });
+	console.log(`✅ Nuevo usuario registrado: ${email}`)
+	res.status(201).json({
+	    success: true,
+	    msg: `Usuario ${name} ${lastname} creado exitosamente`
+	});
+
     } catch (error) {
-        const errorMessage = error instanceof Error ? error.message : 'Error desconocido';
-        res.status(500).json({ msg: 'Error al crear el usuario', error: errorMessage });
+        console.error("Error en registro:", error);
+        res.status(500).json({
+            success: false,
+            msg: 'Error interno del servidor',
+	    
+        });
     }
 };
 
 export const login = async (req: Request, res: Response) => {
     const { password, email } = req.body;
-    
-    const user = await User.findOne({ where: { email: email } });
 
-    if (!user) {
+    if (!password || !email) {
         return res.status(400).json({
-            msg: `Usuario no existe`
+            success: false,
+            msg: "Email y contraseña son requeridos"
         });
     }
 
     try {
+        const user = await User.findOne({ 
+            where: { email: email },
+            attributes: ['id', 'name', 'lastname', 'password', 'email'] 
+        });
+
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                msg: "Usuario no encontrado"
+            });
+        }
+
         const passwordValid = await bcrypt.compare(password, user.password);
         
         if (!passwordValid) {
-            return res.status(400).json({
-                msg: `Contraseña incorrecta`
+            return res.status(401).json({
+                success: false,
+                msg: "Credenciales inválidas"
             });
         }
 
         const token = jwt.sign(
-            { 
-                email: email,
-                userId: user.id // Añadir ID al token
-            }, 
-            process.env.SECRET_KEY || 'Pablo-de-Abajo-TKN', 
-            { expiresIn: '1h' }
-        );
+            {
+                userId: user.id,
+                name: user.name,
+                lastname: user.lastname,
+                email: user.email
+            },
+            process.env.SECRET_KEY || 'Pablo-de-Abajo-TKN',
+            { expiresIn: '1h' });
+	    console.log(`🔑 Usuario logueado: ${user.email}`);
         
-        res.json({ token });
+        res.json({
+            success: true,
+            token,
+            user: {
+                id: user.id,
+                name: user.name,
+                lastname: user.lastname,
+                email: user.email
+            }
+        });
+
     } catch (error) {
-        console.error("Error en verificación:", error);
+        console.error("Error en login:", error);
         res.status(500).json({
-            msg: `Error interno de autenticación`
+            success: false,
+            msg: 'Error interno de autenticación'
         });
     }
 };

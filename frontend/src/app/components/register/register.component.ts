@@ -1,40 +1,42 @@
 import { Component } from '@angular/core';
+import { FormControl, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
-import { Router } from '@angular/router';
-import { FormsModule } from '@angular/forms';
+import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink],
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.css']
 })
 export class RegisterComponent {
-  userData = {
-    name: '',
-    lastname: '',
-    email: '',
-    credential: '',
-    password: ''
-  };
-  errorMessage: string = '';
+  registerForm = new FormGroup({
+    name: new FormControl('', Validators.required),
+    lastname: new FormControl('', Validators.required),
+    email: new FormControl('', [Validators.required, Validators.email]),
+    credential: new FormControl('', Validators.required),
+    password: new FormControl('', [Validators.required, Validators.minLength(8)])
+  });
 
   constructor(private http: HttpClient, private router: Router) {}
 
   onSubmit() {
-    console.log('Enviando datos:', this.userData);
-    this.http.post<any>('/api/user/register', this.userData)
+    if (this.registerForm.invalid) return;
+
+    this.http.post(`${environment.apiUrl}/users/register`, this.registerForm.value)
       .subscribe({
-        next: (response) => {
-          alert('Usuario registrado correctamente');
-          this.router.navigate(['/login']);
+        next: () => {
+          this.router.navigate(['/login'], {
+            state: { registrationSuccess: true }
+          });
         },
-        error: (error) => {
-          console.error('Error completo:', error);
-          this.errorMessage = error.error?.msg || 'Error al registrar usuario';
+        error: (err) => {
+          this.registerForm.setErrors({
+            serverError: err.error?.message || 'Error al registrar usuario'
+          });
         }
       });
   }

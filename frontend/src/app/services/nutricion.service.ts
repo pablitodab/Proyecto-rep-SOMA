@@ -1,12 +1,16 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { BaseService } from './base.service';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class NutricionService extends BaseService<any> {
-  constructor(http: HttpClient) {
-    super(http, 'nutricion');
+  constructor() {
+    super('nutricion');
+  }
+
+  getResumenSemanal(userId: number) {
+    return this.http.get(`${this.apiUrl}/resumen`, {
+      params: { userId: userId.toString() },
+      headers: this.headers
+    });
   }
 }

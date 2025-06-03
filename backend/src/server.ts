@@ -1,62 +1,57 @@
 import express, { Application } from 'express';
 import { sequelize } from './database/connection';
 import { setupAssociations } from './models/associations';
-
-import User from './models/user';
-import RUser from './routes/user';
-
-import Objetivo from "./models/objetivo";
-import RObjetivo from './routes/objetivo';
-
-import Diario from './models/diario';
-import RDiario from './routes/diario';
-
-import Nutricion from './models/nutricion';
-import RNutricion from './routes/nutricion';
-
-import Rutina from './models/rutina';
-import RRutina from './routes/rutina';
+import userRouter from './routes/user';
+import diarioRouter from './routes/diario';
+import nutricionRouter from './routes/nutricion';
+import objetivoRouter from './routes/objetivo';
+import rutinaRouter from './routes/rutina';
+import cors from 'cors';
+import morgan from 'morgan';
 
 class Server {
     private app: Application;
     private port: string;
 
-    constructor(){
+    constructor() {
         this.app = express();
         this.port = process.env.PORT || '3001';
-        this.listen();
-        this.middlewares();
-        this.router();
+        this.config();
         this.DBconnect();
     }
 
-    listen() {
-        this.app.listen(this.port, () => {
-            console.log("Servidor corriendo en puerto: " + this.port);
-        })
-    }
-
-    router() {
-        this.app.use(RUser);
-        this.app.use('/api/objetivos', RObjetivo);
-	this.app.use('/api/diario', RDiario);
-	this.app.use('/api/nutricion', RNutricion);
-	this.app.use('/api/rutina', RRutina);
-    }
-
-    middlewares() {
+    private config() {
+        // Middlewares
+	this.app.use(morgan('dev'));
+        this.app.use(cors({
+            origin: ['https://proyecto.pablitoda.com', 'http://localhost:4200'],
+            credentials: true
+        }));
         this.app.use(express.json());
+        
+        // Rutas
+        this.app.use('/api/users', userRouter);
+        this.app.use('/api/diario', diarioRouter);
+        this.app.use('/api/nutricion', nutricionRouter);
+        this.app.use('/api/objetivos', objetivoRouter);
+        this.app.use('/api/rutina', rutinaRouter);
     }
 
-    async DBconnect(){
+    private async DBconnect() {
         try {
+            await sequelize.authenticate();
             setupAssociations();
-            await User.sync({ alter: false });
-            await sequelize.sync({ alter: false });
-            console.log("Modelos sincronizados correctamente");
+            console.log('✅ Conectado a la base de datos');
         } catch (error) {
-            console.log("Error de conexión: ", error)
+            console.error('❌ Error de conexión a la base de datos:', error);
+            process.exit(1);
         }
+    }
+
+    public start() {
+        this.app.listen(this.port, () => {
+            console.log(`🚀 Servidor corriendo en puerto ${this.port}`);
+        });
     }
 }
 

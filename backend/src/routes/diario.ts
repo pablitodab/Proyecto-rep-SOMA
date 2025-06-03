@@ -1,10 +1,19 @@
 import { Router } from "express";
-import { crearEntrada, obtenerEntradas } from "../controllers/diario";
+import { 
+  crearEntrada,
+  obtenerEntradasUsuario,
+  actualizarEntrada,
+  eliminarEntrada
+} from "../controllers/diario";
 import validateToken from "./validateToken";
 
 const router = Router();
 
-router.post('/', validateToken, crearEntrada);
-router.get('/', validateToken, obtenerEntradas);
+router.use(validateToken);
+
+router.get('/user/:userId', obtenerEntradasUsuario);
+router.post('/', crearEntrada);
+router.patch('/:id', actualizarEntrada);
+router.delete('/:id', eliminarEntrada);
 
 export default router;

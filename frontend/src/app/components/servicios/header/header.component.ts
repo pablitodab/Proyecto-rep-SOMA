@@ -1,24 +1,39 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
+import { AuthService } from '../../../services/auth.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [RouterLink],
+  imports: [RouterLink, CommonModule],
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.css']
 })
-export class HeaderComponent {
-  constructor(private router: Router) {}
+export class HeaderComponent implements OnInit {
+  username = '';
+  userEmail = '';
+
+  constructor(
+    private router: Router,
+    private auth: AuthService
+  ) {}
+
+  ngOnInit() {
+    this.loadUserInfo();
+  }
+
+  loadUserInfo() {
+    this.username = this.auth.getUsername();
+    this.userEmail = this.auth.getUserEmail();
+  }
 
   logout() {
-    localStorage.removeItem('token');
-    this.router.navigate(['/login']);
-    window.location.reload();
+    this.auth.logout();
   }
 
   logoutAndGoHome() {
-    localStorage.removeItem('token');
+    this.auth.logout();
     window.location.href = 'https://pablitoda.com';
   }
 }

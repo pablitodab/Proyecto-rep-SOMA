@@ -1,27 +1,73 @@
 <app-header></app-header>
-<div class="diario-container">
-  <h2>Mi Diario</h2>
-  <form (ngSubmit)="onSubmit()" #diarioForm="ngForm">
+
+<section class="diario-container">
+  <h2>Diario Personal</h2>
+  
+  <!-- Formulario -->
+  <form (ngSubmit)="onSubmit()" class="form-diario">
     <div class="form-group">
-      <label>Título</label>
-      <input type="text" [(ngModel)]="nuevaEntrada.titulo" name="titulo" required>
+      <label>Título:</label>
+      <input 
+        type="text" 
+        [(ngModel)]="nuevaEntrada.titulo" 
+        name="titulo"
+        required
+        placeholder="¿Cómo te sientes hoy?"
+      >
     </div>
+
     <div class="form-group">
-      <label>Fecha</label>
-      <input type="date" [(ngModel)]="nuevaEntrada.fecha" name="fecha" required>
+      <label>Fecha:</label>
+      <input 
+        type="date" 
+        [(ngModel)]="nuevaEntrada.fecha" 
+        name="fecha"
+        required
+      >
     </div>
+
     <div class="form-group">
-      <label>Texto</label>
-      <textarea [(ngModel)]="nuevaEntrada.texto" name="texto" required></textarea>
+      <label>Contenido:</label>
+      <textarea 
+        [(ngModel)]="nuevaEntrada.texto" 
+        name="texto" 
+        rows="5"
+        required
+        placeholder="Escribe tus pensamientos aquí..."
+      ></textarea>
     </div>
-    <button type="submit" [disabled]="!diarioForm.valid">Guardar entrada</button>
+
+    <button type="submit" class="btn-guardar">
+      {{ entradaEditando ? 'Actualizar' : 'Guardar' }}
+    </button>
+    <button 
+      type="button" 
+      class="btn-cancelar" 
+      (click)="resetFormulario()"
+      *ngIf="entradaEditando"
+    >
+      Cancelar
+    </button>
   </form>
-  <div class="entradas-list">
-    <div class="entrada-item" *ngFor="let entrada of entradas">
-      <h3>{{ entrada.titulo }}</h3>
-      <p class="fecha">{{ entrada.fecha | date:'dd/MM/yyyy' }}</p>
-      <p class="texto">{{ entrada.texto }}</p>
+
+  <!-- Listado de entradas -->
+  <div class="lista-entradas">
+    <div *ngFor="let entrada of entradas" class="entrada">
+      <div class="encabezado">
+        <h3>{{ entrada.titulo }}</h3>
+        <span class="fecha">{{ entrada.fecha | date:'dd/MM/yyyy' }}</span>
+      </div>
+      <p class="contenido">{{ entrada.texto }}</p>
+      <div class="acciones">
+        <button (click)="editarEntrada(entrada)" class="btn-editar">
+          ✏️ Editar
+        </button>
+        <button (click)="eliminarEntrada(entrada.id!)" class="btn-eliminar">
+          🗑️ Eliminar
+        </button>
+      </div>
     </div>
   </div>
-</div>
+</section>
+
 <app-footer></app-footer>

@@ -5,19 +5,19 @@ import Nutricion from './nutricion';
 import Rutina from './rutina';
 
 export function setupAssociations() {
-  // objetivos
+  // User -> Objetivos (1:N)
   User.hasMany(Objetivo, { foreignKey: 'userId' });
   Objetivo.belongsTo(User, { foreignKey: 'userId' });
-  
-  // diario
+
+  // User -> Diario (1:N)
   User.hasMany(Diario, { foreignKey: 'userId' });
   Diario.belongsTo(User, { foreignKey: 'userId' });
 
-  // nutricion
+  // User -> Nutricion (1:N)
   User.hasMany(Nutricion, { foreignKey: 'userId' });
   Nutricion.belongsTo(User, { foreignKey: 'userId' });
 
-  // rutina
+  // User -> Rutina (1:N)
   User.hasMany(Rutina, { foreignKey: 'userId' });
   Rutina.belongsTo(User, { foreignKey: 'userId' });
 }

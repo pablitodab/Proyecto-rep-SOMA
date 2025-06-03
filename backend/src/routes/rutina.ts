@@ -1,10 +1,13 @@
 import { Router } from "express";
-import { crearRutina, obtenerRutinas } from "../controllers/rutina";
+import { crearRutina, obtenerRutinas, obtenerRutinasUsuario } from "../controllers/rutina";
 import validateToken from "./validateToken";
 
 const router = Router();
 
-router.post('/', validateToken, crearRutina);
-router.get('/', validateToken, obtenerRutinas);
+router.use(validateToken);
+
+router.get('/user/:userId', obtenerRutinasUsuario);
+router.get('/', obtenerRutinas);
+router.post('/', crearRutina);
 
 export default router;

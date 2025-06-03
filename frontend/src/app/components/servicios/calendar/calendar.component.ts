@@ -9,4 +9,6 @@ import { FooterComponent } from '../footer/footer.component';
   templateUrl: './calendar.component.html',
   styleUrls: ['./calendar.component.css']
 })
-export class CalendarComponent {}
+export class CalendarComponent {
+  // Aquí puedes añadir lógica si necesitas manejar eventos del calendario
+}

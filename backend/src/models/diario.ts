@@ -11,21 +11,20 @@ interface DiarioAttributes {
 }
 
 class Diario extends Model<DiarioAttributes> implements DiarioAttributes {
-  public id!: number;
-  public titulo!: string;
-  public fecha!: Date;
-  public texto!: string;
-  public userId!: number;
+  declare id: number;
+  declare titulo: string;
+  declare fecha: Date;
+  declare texto: string;
+  declare userId: number;
 }
 
 Diario.init({
   titulo: {
-    type: DataTypes.STRING,
+    type: DataTypes.STRING(255),
     allowNull: false
   },
   fecha: {
     type: DataTypes.DATE,
-    allowNull: false,
     defaultValue: DataTypes.NOW
   },
   texto: {
@@ -43,6 +42,8 @@ Diario.init({
 }, {
   sequelize,
   modelName: 'Diario',
+  tableName: 'Diario',
+  freezeTableName: true,
   timestamps: false
 });
 

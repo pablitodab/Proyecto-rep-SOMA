@@ -1,10 +1,42 @@
 <app-header></app-header>
-<div class="routine-container">
-  <h2>Mis Rutinas</h2>
-  <form (ngSubmit)="onSubmit()" #routineForm="ngForm">
+
+<section class="routine-container">
+  <h2>Organiza tu Rutina Semanal</h2>
+  <p class="descripcion">
+    Completa la rutina para cada día de la semana y guárdala para consultarla y editarla fácilmente.
+  </p>
+
+  <div *ngIf="!mostrarFormulario">
+    <table>
+      <thead>
+        <tr>
+          <th>Día</th>
+          <th>Rutina</th>
+          <th>Enfoque</th>
+          <th>Cardio</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let dia of diasSemana">
+          <td>{{ dia.dia }}</td>
+          <td>{{ dia.descripcion || '-' }}</td>
+          <td>{{ dia.enfoque || '-' }}</td>
+          <td>{{ dia.cardio ? '✅' : '❌' }}</td>
+          <td>
+            <button (click)="editarDia(dia)">✏️ Editar</button>
+            <button (click)="eliminarDia(dia)" *ngIf="dia.id">🗑️ Eliminar</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <button (click)="editarDia({ dia: 'lunes', descripcion: '', enfoque: '', cardio: false })">Añadir Rutina</button>
+  </div>
+
+  <form *ngIf="mostrarFormulario" (ngSubmit)="guardarRutina()" class="form-rutina">
     <div class="form-group">
-      <label>Día</label>
-      <select [(ngModel)]="nuevaRutina.dia" name="dia" required>
+      <label>Día:</label>
+      <select [(ngModel)]="rutinaEditable!.dia" name="dia" required>
         <option value="lunes">Lunes</option>
         <option value="martes">Martes</option>
         <option value="miércoles">Miércoles</option>
@@ -15,27 +47,34 @@
       </select>
     </div>
     <div class="form-group">
-      <label>Descripción</label>
-      <input type="text" [(ngModel)]="nuevaRutina.descripcion" name="descripcion" required>
+      <label>Descripción:</label>
+      <textarea
+        [(ngModel)]="rutinaEditable!.descripcion"
+        name="descripcion"
+        required
+      ></textarea>
     </div>
     <div class="form-group">
-      <label>Enfoque</label>
-      <input type="text" [(ngModel)]="nuevaRutina.enfoque" name="enfoque" required>
+      <label>Enfoque:</label>
+      <input
+        type="text"
+        [(ngModel)]="rutinaEditable!.enfoque"
+        name="enfoque"
+        required
+      >
     </div>
     <div class="form-group">
       <label>
-        <input type="checkbox" [(ngModel)]="nuevaRutina.cardio" name="cardio"> Cardio
+        <input
+          type="checkbox"
+          [(ngModel)]="rutinaEditable!.cardio"
+          name="cardio"
+        > Cardio
       </label>
     </div>
-    <button type="submit" [disabled]="!routineForm.valid">Agregar rutina</button>
+    <button type="submit">Guardar</button>
+    <button type="button" (click)="cancelarEdicion()">Cancelar</button>
   </form>
-  <div class="rutinas-list">
-    <div class="rutina-item" *ngFor="let rutina of rutinas">
-      <h3>{{ rutina.dia | titlecase }}</h3>
-      <p>{{ rutina.descripcion }}</p>
-      <p>Enfoque: {{ rutina.enfoque }}</p>
-      <p>Cardio: {{ rutina.cardio ? 'Sí' : 'No' }}</p>
-    </div>
-  </div>
-</div>
+</section>
+
 <app-footer></app-footer>

@@ -1,62 +1,74 @@
 <div class="register-container">
   <h2>Registro de usuario</h2>
-  <form (ngSubmit)="onSubmit()" #registerForm="ngForm">
+  <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
     <div class="form-group">
       <label for="name">Nombre</label>
-      <input 
-        type="text" 
-        id="name" 
-        name="name" 
-        [(ngModel)]="userData.name" 
+      <input
+        type="text"
+        id="name"
+        formControlName="name"
         required
       >
+      <div *ngIf="registerForm.controls['name'].touched && registerForm.controls['name'].errors" class="error-message">
+        <span *ngIf="registerForm.controls['name'].errors?.['required']">El nombre es obligatorio</span>
+      </div>
     </div>
     <div class="form-group">
       <label for="lastname">Apellido</label>
-      <input 
-        type="text" 
-        id="lastname" 
-        name="lastname" 
-        [(ngModel)]="userData.lastname" 
+      <input
+        type="text"
+        id="lastname"
+        formControlName="lastname"
         required
       >
+      <div *ngIf="registerForm.controls['lastname'].touched && registerForm.controls['lastname'].errors" class="error-message">
+        <span *ngIf="registerForm.controls['lastname'].errors?.['required']">El apellido es obligatorio</span>
+      </div>
     </div>
     <div class="form-group">
       <label for="email">Email</label>
-      <input 
-        type="email" 
-        id="email" 
-        name="email" 
-        [(ngModel)]="userData.email" 
-        required 
-        email
+      <input
+        type="email"
+        id="email"
+        formControlName="email"
+        required
       >
+      <div *ngIf="registerForm.controls['email'].touched && registerForm.controls['email'].errors" class="error-message">
+        <span *ngIf="registerForm.controls['email'].errors?.['required']">El email es obligatorio</span>
+        <span *ngIf="registerForm.controls['email'].errors?.['email']">El email no es válido</span>
+      </div>
     </div>
     <div class="form-group">
       <label for="credential">Usuario</label>
-      <input 
-        type="text" 
-        id="credential" 
-        name="credential" 
-        [(ngModel)]="userData.credential" 
+      <input
+        type="text"
+        id="credential"
+        formControlName="credential"
         required
       >
+      <div *ngIf="registerForm.controls['credential'].touched && registerForm.controls['credential'].errors" class="error-message">
+        <span *ngIf="registerForm.controls['credential'].errors?.['required']">El usuario es obligatorio</span>
+      </div>
     </div>
     <div class="form-group">
       <label for="password">Contraseña</label>
-      <input 
-        type="password" 
-        id="password" 
-        name="password" 
-        [(ngModel)]="userData.password" 
+      <input
+        type="password"
+        id="password"
+        formControlName="password"
         required
       >
+      <div *ngIf="registerForm.controls['password'].touched && registerForm.controls['password'].errors" class="error-message">
+        <span *ngIf="registerForm.controls['password'].errors?.['required']">La contraseña es obligatoria</span>
+        <span *ngIf="registerForm.controls['password'].errors?.['minlength']">La contraseña debe tener al menos 8 caracteres</span>
+      </div>
     </div>
-    <button type="submit" [disabled]="!registerForm.valid">Registrarse</button>
+    <button type="submit" [disabled]="registerForm.invalid">
+      Registrarse
+    </button>
+    <div *ngIf="registerForm.errors?.['serverError']" class="error-message">
+      {{ registerForm.errors?.['serverError'] || 'Error al registrar usuario' }}
+    </div>
   </form>
-  <div *ngIf="errorMessage" class="error-message">
-    {{ errorMessage }}
-  </div>
   <p>¿Ya tienes cuenta? <a [routerLink]="['/login']">Inicia sesión aquí</a></p>
 </div>
-

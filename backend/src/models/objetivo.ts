@@ -3,7 +3,7 @@ import { sequelize } from '../database/connection';
 import User from './user';
 
 interface ObjetivoAttributes {
-  id: number;
+  id?: number;
   nombre: string;
   fechaFin: Date;
   importancia: 'alta' | 'media' | 'baja';
@@ -12,27 +12,32 @@ interface ObjetivoAttributes {
 }
 
 class Objetivo extends Model<ObjetivoAttributes> implements ObjetivoAttributes {
-  public id!: number;
-  public nombre!: string;
-  public fechaFin!: Date;
-  public importancia!: 'alta' | 'media' | 'baja';
-  public cumplido!: boolean;
-  public userId!: number;
+  declare id: number;
+  declare nombre: string;
+  declare fechaFin: Date;
+  declare importancia: 'alta' | 'media' | 'baja';
+  declare cumplido: boolean;
+  declare userId: number;
 }
 
 Objetivo.init({
-  id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
-  nombre: { type: DataTypes.STRING, allowNull: false },
-  fechaFin: { type: DataTypes.DATE, allowNull: false },
-  importancia: { 
+  nombre: {
+    type: DataTypes.STRING(255),
+    allowNull: false
+  },
+  fechaFin: {
+    type: DataTypes.DATE,
+    allowNull: false
+  },
+  importancia: {
     type: DataTypes.ENUM('alta', 'media', 'baja'),
     defaultValue: 'media'
   },
-  cumplido: { 
+  cumplido: {
     type: DataTypes.BOOLEAN,
-    defaultValue: false 
+    defaultValue: false
   },
-  userId: { 
+  userId: {
     type: DataTypes.INTEGER,
     allowNull: false,
     references: {
@@ -43,7 +48,11 @@ Objetivo.init({
 }, {
   sequelize,
   modelName: 'Objetivo',
-  timestamps: true
+  tableName: 'Objetivos',
+  freezeTableName: true,
+  timestamps: true,
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 });
 
 export default Objetivo;

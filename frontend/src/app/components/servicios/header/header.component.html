@@ -1,18 +1,26 @@
 <header>
   <div class="header-container">
     <h1>Planificador Diario</h1>
-    <nav>
-      <ul>
-        <li>
-          <a [routerLink]="['/dashboard']">Home</a>
-        </li>
-        <li>
-          <a (click)="logoutAndGoHome()" href="https://pablitoda.com">Mi página</a>
-        </li>
-        <li>
-          <a (click)="logout()" href="#">Cerrar sesión</a>
-        </li>
-      </ul>
-    </nav>
+    
+    <div class="nav-bar">
+      <nav>
+        <ul>
+          <li>
+            <a [routerLink]="['/dashboard']">Home</a>
+          </li>
+          <li>
+            <a (click)="logoutAndGoHome()" href="https://pablitoda.com">Mi página</a>
+          </li>
+          <li>
+            <a (click)="logout()" href="#">Cerrar sesión</a>
+          </li>
+        </ul>
+      </nav>
+      
+      <!-- Información del usuario a la derecha -->
+      <div class="user-info" *ngIf="username">
+        <span class="welcome-message">Bienvenido, <strong>{{ username }}</strong></span>
+      </div>
+    </div>
   </div>
 </header>
