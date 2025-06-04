@@ -2,6 +2,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { AuthService } from './auth.service';
+import { map } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
 export abstract class BaseService<T> {
@@ -20,35 +21,38 @@ export abstract class BaseService<T> {
     });
   }
 
-  // Obtener todos los registros del usuario
   getAll() {
     const userId = this.auth.getUserId();
-    return this.http.get<T[]>(`${this.apiUrl}/user/${userId}`, { 
-      headers: this.headers 
-    });
+    const timestamp = new Date().getTime();
+    return this.http.get<{ data: T[] }>(
+      `${this.apiUrl}/user/${userId}?t=${timestamp}`,
+      { headers: this.headers }
+    ).pipe(
+      map(res => res.data)
+    );
   }
 
-  // Crear registro con userId automático
   create(data: Omit<T, 'userId'>) {
-    const userId = this.auth.getUserId();
-    return this.http.post<T>(this.apiUrl, { ...data, userId }, { 
+    return this.http.post<T>(this.apiUrl, data, { 
       headers: this.headers 
     });
   }
 
-  // Actualizar solo si el registro pertenece al usuario
+  // ✅ CORREGIR UPDATE
   update(id: number, data: Partial<T>) {
-    const userId = this.auth.getUserId();
-    return this.http.patch<T>(`${this.apiUrl}/${id}`, { ...data, userId }, { 
+    return this.http.patch<T>(`${this.apiUrl}/${id}`, data, { 
       headers: this.headers 
     });
   }
 
-  // Eliminar solo registros del usuario
-  delete(id: number) {
-    const userId = this.auth.getUserId();
-    return this.http.delete(`${this.apiUrl}/${id}?userId=${userId}`, { 
-      headers: this.headers 
-    });
+  // ✅ CORREGIR DELETE
+ delete(id: number) {
+  if (!id) {
+    throw new Error('ID es requerido para eliminar');
   }
+  
+  return this.http.delete(`${this.apiUrl}/${id}`, { 
+    headers: this.headers 
+  });
+}
 }

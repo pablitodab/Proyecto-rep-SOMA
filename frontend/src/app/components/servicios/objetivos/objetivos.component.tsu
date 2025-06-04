@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { HeaderComponent } from '../header/header.component';
+import { FooterComponent } from '../footer/footer.component';
 import { ObjetivoService } from '../../../services/objetivo.service';
 
 interface Objetivo {
@@ -15,7 +17,7 @@ interface Objetivo {
 @Component({
     selector: 'app-objetivos',
     standalone: true,
-    imports: [FormsModule, CommonModule],
+    imports: [FormsModule, CommonModule, HeaderComponent, FooterComponent],
     templateUrl: './objetivos.component.html',
     styleUrls: ['./objetivos.component.css']
 })
@@ -93,7 +95,7 @@ export class ObjetivosComponent implements OnInit {
     public resetFormulario(): void {
         this.nuevoObjetivo = { 
             nombre: '', 
-            descripcion: '',
+            descripcion: '',  // AÑADIDO
             fechaFin: '', 
             importancia: 'media', 
             cumplido: false 

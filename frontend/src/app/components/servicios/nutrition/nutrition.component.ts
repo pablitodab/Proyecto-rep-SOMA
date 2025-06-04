@@ -1,8 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { HeaderComponent } from '../header/header.component';
-import { FooterComponent } from '../footer/footer.component';
 import { NutricionService } from '../../../services/nutricion.service';
 
 interface RegistroNutricion {
@@ -22,7 +20,7 @@ interface RegistroNutricion {
 @Component({
   selector: 'app-nutrition',
   standalone: true,
-  imports: [FormsModule, CommonModule, HeaderComponent, FooterComponent],
+  imports: [FormsModule, CommonModule],
   templateUrl: './nutrition.component.html',
   styleUrls: ['./nutrition.component.css']
 })

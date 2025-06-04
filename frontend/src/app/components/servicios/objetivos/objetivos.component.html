@@ -1,94 +1,113 @@
-<app-header></app-header>
-
-<section class="objetivos-container">
-  <h2>Gestión de Objetivos</h2>
-  <p class="descripcion">
-    Define y monitoriza tus metas personales. Establece plazos y prioridades para mantener el enfoque en lo importante.
-  </p>
-
-  <form (ngSubmit)="agregarObjetivo()" class="form-objetivo">
-    <div class="form-group">
-      <label for="nombre">Nombre del objetivo:</label>
-      <input 
-        type="text" 
-        id="nombre" 
-        [(ngModel)]="nuevoObjetivo.nombre" 
-        name="nombre"
-        required
-      >
-    </div>
-
-    <div class="form-group">
-      <label for="fechaFin">Fecha límite:</label>
-      <input 
-        type="date" 
-        id="fechaFin" 
-        [(ngModel)]="nuevoObjetivo.fechaFin" 
-        name="fechaFin"
-        required
-      >
-    </div>
-
-    <div class="form-group">
-      <label>Importancia:</label>
-      <select [(ngModel)]="nuevoObjetivo.importancia" name="importancia">
-        <option value="alta">Alta</option>
-        <option value="media">Media</option>
-        <option value="baja">Baja</option>
-      </select>
-    </div>
-
-    <div class="form-group checkbox">
-      <label>
-        <input 
-          type="checkbox" 
-          [(ngModel)]="nuevoObjetivo.cumplido" 
-          name="cumplido"
-        > Cumplido
-      </label>
-    </div>
-
-    <button type="submit" [disabled]="!nuevoObjetivo.nombre || !nuevoObjetivo.fechaFin">
-      {{ editando ? 'Actualizar' : 'Agregar' }} Objetivo
-    </button>
-  </form>
-
-  <div class="tabla-objetivos">
-    <table>
-      <thead>
-        <tr>
-          <th>Objetivo</th>
-          <th>Fecha Límite</th>
-          <th>Importancia</th>
-          <th>Estado</th>
-          <th>Acciones</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let objetivo of objetivos">
-          <td>{{ objetivo.nombre }}</td>
-          <td>{{ objetivo.fechaFin | date:'dd/MM/yyyy' }}</td>
-          <td>
-            <span class="badge importancia-{{objetivo.importancia}}">
-              {{ objetivo.importancia | titlecase }}
-            </span>
-          </td>
-          <td>
-            <input 
-              type="checkbox" 
-              [checked]="objetivo.cumplido" 
-              (change)="marcarCumplido(objetivo.id!)"
+<section class="main-content">
+    <h2>Gestión de Objetivos</h2>
+    <p class="descripcion">
+        Define y monitoriza tus metas personales. Establece plazos y prioridades para mantener el enfoque en lo importante.
+    </p>
+    
+    <form (ngSubmit)="agregarObjetivo()" class="form-objetivo">
+        <div class="form-group">
+            <label for="nombre">Nombre del objetivo:</label>
+            <input
+                type="text"
+                id="nombre"
+                [(ngModel)]="nuevoObjetivo.nombre"
+                name="nombre"
+                required
             >
-          </td>
-          <td class="acciones">
-            <button (click)="editarObjetivo(objetivo)">✏️</button>
-            <button (click)="eliminarObjetivo(objetivo.id!)">🗑️</button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-</section>
+        </div>
+        
+        <!-- CAMPO DESCRIPCIÓN AÑADIDO -->
+        <div class="form-group">
+            <label for="descripcion">Descripción:</label>
+            <textarea
+                id="descripcion"
+                [(ngModel)]="nuevoObjetivo.descripcion"
+                name="descripcion"
+                rows="3"
+                placeholder="Describe tu objetivo..."
+            ></textarea>
+        </div>
+        
+        <div class="form-group">
+            <label for="fechaFin">Fecha límite:</label>
+            <input
+                type="date"
+                id="fechaFin"
+                [(ngModel)]="nuevoObjetivo.fechaFin"
+                name="fechaFin"
+                required
+            >
+        </div>
+        
+        <div class="form-group">
+            <label>Importancia:</label>
+            <select [(ngModel)]="nuevoObjetivo.importancia" name="importancia">
+                <option value="alta">Alta</option>
+                <option value="media">Media</option>
+                <option value="baja">Baja</option>
+            </select>
+        </div>
+        
+        <div class="form-group checkbox">
+            <label>
+                <input
+                    type="checkbox"
+                    [(ngModel)]="nuevoObjetivo.cumplido"
+                    name="cumplido"
+                > Cumplido
+            </label>
+        </div>
+        
+        <button type="submit" [disabled]="!nuevoObjetivo.nombre || !nuevoObjetivo.fechaFin">
+            {{ editando ? 'Actualizar' : 'Agregar' }} Objetivo
+        </button>
+        
+        <button type="button" (click)="resetFormulario()" *ngIf="editando">
+            Cancelar
+        </button>
+    </form>
 
-<app-footer></app-footer>
+    <div class="tabla-objetivos">
+        <h3>Lista de Objetivos</h3>
+        <div *ngIf="objetivos.length === 0" class="no-objetivos">
+            No tienes objetivos registrados aún.
+        </div>
+        
+        <table *ngIf="objetivos.length > 0">
+            <thead>
+                <tr>
+                    <th>Objetivo</th>
+                    <th>Descripción</th>  <!-- AÑADIDO -->
+                    <th>Fecha Límite</th>
+                    <th>Importancia</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let objetivo of objetivos">
+                    <td>{{ objetivo.nombre }}</td>
+                    <td>{{ objetivo.descripcion || '-' }}</td>  <!-- AÑADIDO -->
+                    <td>{{ objetivo.fechaFin | date:'dd/MM/yyyy' }}</td>
+                    <td>
+                        <span class="badge importancia-{{objetivo.importancia}}">
+                            {{ objetivo.importancia | titlecase }}
+                        </span>
+                    </td>
+                    <td>
+                        <input
+                            type="checkbox"
+                            [checked]="objetivo.cumplido"
+                            (change)="marcarCumplido(objetivo.id!)"
+                        >
+                    </td>
+                    <td class="acciones">
+                        <button (click)="editarObjetivo(objetivo)">Editar</button>
+                        <button (click)="eliminarObjetivo(objetivo.id!)">Eliminar</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</section>
 

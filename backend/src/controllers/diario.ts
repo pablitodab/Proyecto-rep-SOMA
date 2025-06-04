@@ -37,6 +37,7 @@ export const obtenerEntradasUsuario = async (req: Request, res: Response) => {
   }
 };
 
+// ✅ AÑADIR ESTOS MÉTODOS
 export const actualizarEntrada = async (req: Request, res: Response) => {
   try {
     const [affectedCount] = await Diario.update(req.body, {
@@ -58,6 +59,7 @@ export const actualizarEntrada = async (req: Request, res: Response) => {
       msg: 'Entrada actualizada' 
     });
   } catch (error) {
+    console.error("Error actualizando entrada:", error);
     res.status(500).json({ 
       success: false, 
       msg: 'Error al actualizar entrada' 
@@ -67,9 +69,13 @@ export const actualizarEntrada = async (req: Request, res: Response) => {
 
 export const eliminarEntrada = async (req: Request, res: Response) => {
   try {
+    const { id } = req.params;
+    
+    console.log('Eliminando entrada ID:', id, 'Usuario:', req.userId); // Debug
+    
     const count = await Diario.destroy({
       where: { 
-        id: req.params.id,
+        id: parseInt(id),
         userId: req.userId!
       }
     });
@@ -77,18 +83,19 @@ export const eliminarEntrada = async (req: Request, res: Response) => {
     if (count === 0) {
       return res.status(404).json({ 
         success: false, 
-        msg: 'Entrada no encontrada' 
+        msg: 'Entrada no encontrada o no tienes permisos' 
       });
     }
 
     res.json({ 
       success: true, 
-      msg: 'Entrada eliminada' 
+      msg: 'Entrada eliminada correctamente' 
     });
   } catch (error) {
+    console.error("Error eliminando entrada:", error);
     res.status(500).json({ 
       success: false, 
-      msg: 'Error al eliminar entrada' 
+      msg: 'Error interno del servidor' 
     });
   }
 };

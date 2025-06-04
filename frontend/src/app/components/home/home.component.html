@@ -8,6 +8,10 @@
   </nav>
 </header>
 
+<section class="hero">
+  <i class="fa-solid fa-calendar-check"></i>
+</section>
+
 <section class="introduccion">
   <h2>¡Organiza tu vida en un solo lugar!</h2>
   <p>
@@ -16,8 +20,13 @@
     calendario, nutrición, pensamientos, objetivos y ejercicio de manera
     sencilla y desde una única aplicación.
   </p>
-
-  <p>Este proyecto</p>
+  <p>
+    Este proyecto nace con el objetivo de ayudarte a mejorar tu organización personal,
+    facilitando el seguimiento de tus hábitos y metas. ¡Empieza hoy mismo a vivir una vida más organizada!
+  </p>
+  <div class="cta">
+    <a [routerLink]="['/register']" class="btn">¡Empieza ahora!</a>
+  </div>
 </section>
 
 <section class="contenido">
@@ -77,13 +86,31 @@
   </div>
 </section>
 
-<section class="informacion">
-
+<section class="pasos">
+  <h2>¿Cómo empezar?</h2>
+  <ol>
+    <li>Regístrate en la plataforma.</li>
+    <li>Explora las diferentes herramientas.</li>
+    <li>¡Empieza a organizar tu vida!</li>
+  </ol>
 </section>
 
+<section class="informacion">
+  <h2>¿Por qué elegir SOMA?</h2>
+  <ul>
+    <li>Organiza tu vida desde cualquier dispositivo.</li>
+    <li>Accede a tus datos de forma segura y privada.</li>
+    <li>Personaliza tus rutinas y objetivos a tu medida.</li>
+  </ul>
+</section>
 
 <footer>
   <div class="footer-content">
+    <div class="footer-links">
+      <a [routerLink]="['/faq']">Preguntas frecuentes</a>
+      <a [routerLink]="['/contacto']">Contacto</a>
+      <a [routerLink]="['/privacidad']">Política de privacidad</a>
+    </div>
     <p>&copy; 2025. Proyecto TFG Pablo de Abajo</p>
     <div class="redes-sociales">
       <a href="https://www.instagram.com/paabliitoo.da" target="_blank" title="Instagram">

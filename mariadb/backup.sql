@@ -32,7 +32,7 @@ CREATE TABLE `Diario` (
   PRIMARY KEY (`id`),
   KEY `fk_diario_user` (`userId`),
   CONSTRAINT `fk_diario_user` FOREIGN KEY (`userId`) REFERENCES `Users` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -42,10 +42,8 @@ CREATE TABLE `Diario` (
 LOCK TABLES `Diario` WRITE;
 /*!40000 ALTER TABLE `Diario` DISABLE KEYS */;
 INSERT INTO `Diario` VALUES
-(1,'DIA','2025-06-03 12:43:26','9ueghvWEIUGB',1),
-(2,'DIA 1 pepe','2025-06-03 12:45:23','funciona',4),
-(3,'DIA 2','2025-06-03 13:16:06','hola',1),
-(4,'Dia2','2025-06-03 00:00:00','Esto es una prueba',1);
+(9,'DIA 1','2025-06-03 00:00:00','Hoy he conseguido hacer que funcione correctamente la aplicación',1),
+(12,'DIA 2','2025-06-04 00:00:00','Cambiamos los estilos de la página y completamos todas sus funcionalidades\n',1);
 /*!40000 ALTER TABLE `Diario` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -84,8 +82,6 @@ CREATE TABLE `Nutricion` (
 
 LOCK TABLES `Nutricion` WRITE;
 /*!40000 ALTER TABLE `Nutricion` DISABLE KEYS */;
-INSERT INTO `Nutricion` VALUES
-(1,'2025-06-03',3000,2500,15.00,NULL,NULL,NULL,NULL,NULL,NULL,200.00,160.00,50.00,1);
 /*!40000 ALTER TABLE `Nutricion` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -105,10 +101,11 @@ CREATE TABLE `Objetivos` (
   `userId` int(11) NOT NULL,
   `createdAt` datetime NOT NULL,
   `updatedAt` datetime NOT NULL,
+  `descripcion` text DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_objetivos_user` (`userId`),
   CONSTRAINT `fk_objetivos_user` FOREIGN KEY (`userId`) REFERENCES `Users` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -118,7 +115,8 @@ CREATE TABLE `Objetivos` (
 LOCK TABLES `Objetivos` WRITE;
 /*!40000 ALTER TABLE `Objetivos` DISABLE KEYS */;
 INSERT INTO `Objetivos` VALUES
-(1,'100 en banca','2025-06-07 00:00:00','alta',0,4,'2025-06-03 12:45:54','2025-06-03 12:45:54');
+(4,'100kg en banca','2025-06-30 00:00:00','media',0,1,'2025-06-04 08:38:22','2025-06-04 08:47:48','Levantar 100kg en banca a finales de mes'),
+(5,'Ahorrar','2025-07-08 00:00:00','alta',0,1,'2025-06-04 08:48:19','2025-06-04 08:48:19','Ahorrar 100€ para Fuengirola');
 /*!40000 ALTER TABLE `Objetivos` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -148,14 +146,6 @@ CREATE TABLE `Rutina` (
 
 LOCK TABLES `Rutina` WRITE;
 /*!40000 ALTER TABLE `Rutina` DISABLE KEYS */;
-INSERT INTO `Rutina` VALUES
-(1,'lunes','Pecho, Hombro, Tríceps','Pecho superior',1,1),
-(2,'martes','Espalda, Hombro, Bíceps','Espalda',1,1),
-(3,'miércoles','Pierna y Lumbar','Cuadriceps',1,1),
-(4,'jueves','Pecho, Hombro, Tríceps','Hombros laterales',1,1),
-(5,'viernes','Espalda, Hombro, Bíceps','Bíceps',0,1),
-(6,'sábado','Pierna y Glúteos','Femoral',1,1),
-(7,'domingo','Día de descanso, caminar','Descansar',1,1);
 /*!40000 ALTER TABLE `Rutina` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -178,7 +168,7 @@ CREATE TABLE `Users` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `email` (`email`),
   UNIQUE KEY `credential` (`credential`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -188,10 +178,7 @@ CREATE TABLE `Users` (
 LOCK TABLES `Users` WRITE;
 /*!40000 ALTER TABLE `Users` DISABLE KEYS */;
 INSERT INTO `Users` VALUES
-(1,'Pablo','De Abajo Plans','pablo.deabajo.plans@gmail.com','$2b$10$3IVBfD25c/1CWT0cWi.OseeJjQ0CpasvvVAD3Sn0iKvaWCmnRgbX6','pablitoda',1,'2025-06-03 10:46:08'),
-(2,'Alvaro','De Abajo Plans','alvaro.deabajo.plans@gmail.com','$2b$10$/l3Kk5Ylk9w1WwmZno3h9upIvfiurnL3k909CWYtRQyUdEb3PnmpS','Varo',1,'2025-06-03 12:04:54'),
-(3,'Alejandro','De Abajo Sanz','adeabajo@gmail.com','$2b$10$DBqYpT8uVd9JyVRfxDJQIObNmFPnnaNjQ.hBZrt2AyLW/yeZtIvBG','adeabajo',1,'2025-06-03 12:23:52'),
-(4,'pepe','pepe','pepe@gmail.com','$2b$12$YZafvJFzSAGwsPLYEYEl5uhr29Av8/lW2yE8oKslV7fPKictAnbFm','pepe',1,'2025-06-03 12:44:45');
+(1,'Pablo','De Abajo Plans','pablo.deabajo.plans@gmail.com','$2b$12$zWS9CT5SVyXm4abTbYLAuOfrPMZOV0grcjZN5EI0QeGK0k8cBoG0y','Pablitoda',1,'2025-06-03 20:12:59');
 /*!40000 ALTER TABLE `Users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -204,4 +191,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-06-03 14:27:33
+-- Dump completed on 2025-06-04 11:02:51

@@ -7,4 +7,8 @@ export class DiarioService extends BaseService<EntradaDiario> {
   constructor() {
     super('diario');
   }
+
+override getAll() {
+    return super.getAll();
+  }
 }

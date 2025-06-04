@@ -38,7 +38,7 @@ server {
     }
 
     # Limitar métodos HTTP
-    if ($request_method !~ ^(GET|HEAD|POST)$) {
+    if ($request_method !~ ^(GET|HEAD|POST|PATCH|DELETE)$) {
         return 405;
     }
 }

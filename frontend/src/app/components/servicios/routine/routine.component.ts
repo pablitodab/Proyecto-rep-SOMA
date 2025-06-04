@@ -1,8 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { HeaderComponent } from '../header/header.component';
-import { FooterComponent } from '../footer/footer.component';
 import { RutinaService } from '../../../services/rutina.service';
 
 interface RutinaDia {
@@ -16,7 +14,7 @@ interface RutinaDia {
 @Component({
   selector: 'app-routine',
   standalone: true,
-  imports: [FormsModule, CommonModule, HeaderComponent, FooterComponent],
+  imports: [FormsModule, CommonModule],
   templateUrl: './routine.component.html',
   styleUrls: ['./routine.component.css']
 })
